@@ -4,7 +4,7 @@
     "description": "A library providing an easy-to-use abstraction for interfacing with STM32's integrated USART/UART bootloader from another MCU. Primarily designed to allow an easy way to program an STM32 from another MCU.",
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "https://github.com/NickLD/STM32BootloaderInterfaceLibrary/"
     },
     "version": "1.0",
     "examples": "examples/*/*.ino",
