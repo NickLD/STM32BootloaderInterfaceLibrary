@@ -265,7 +265,7 @@ size_t STM32BootloaderInterface::WriteToFlash(uint8_t *data, size_t size)
         memcpy(this->_blockBuffer, data + (size - remainingByteSize), this->_baseConfig.BlockBufferSize);
         DEBPVAR(this->_baseConfig.BlockBufferSize);
         DEBPMSG("Copied bytes into block buffer. Attempting to write.");
-        //this->_latestDeviceState = this->_WriteMemoryAtAddress(this->_startAddress + this->_bytesReadWriteOffset - this->_baseConfig.BlockBufferSize, this->_baseConfig.BlockBufferSize);
+
         this->_latestDeviceState = this->_WriteMemoryAtAddress(this->_startAddress + this->_bytesReadWriteOffset, this->_baseConfig.BlockBufferSize);
         // Check if the write failed or not. Return what we DID write if it did fail.
         if (this->_latestDeviceState != CommandResult::RESULT_OK)
@@ -285,7 +285,7 @@ size_t STM32BootloaderInterface::WriteToFlash(uint8_t *data, size_t size)
     // For remaining that that doesn't perfectly fit the BlockBufferSize, we need to do one last write
     memcpy(this->_blockBuffer, data + (size - remainingByteSize), remainingByteSize);
     DEBPMSG("Copied bytes into block buffer. Attempting to write.");
-    //this->_latestDeviceState = this->_WriteMemoryAtAddress(this->_startAddress + this->_bytesReadWriteOffset - remainingByteSize, remainingByteSize);
+
     this->_latestDeviceState = this->_WriteMemoryAtAddress(this->_startAddress + this->_bytesReadWriteOffset, remainingByteSize);
     if (this->_latestDeviceState != CommandResult::RESULT_OK)
     {
@@ -344,10 +344,11 @@ size_t STM32BootloaderInterface::WriteStreamToFlash(Stream &data)
         {
             DEBPMSG("Completed write init size. Resetting mode and return.");
             // Reset the things we should reset
+            uint32_t written = this->_bytesReadWriteOffset;
             this->_bytesReadWriteOffset = 0;
             this->_deviceInWriteMode = false;
 
-            return this->_bytesReadWriteOffset;
+            return written;
         }
     }
     DEBPMSG("Finished writing stream");
